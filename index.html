@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Harian dengan Nada Dering</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #27ae60;
+            --background-color: #f4f7f6;
+            --card-background: #ffffff;
+            --text-color: #333333;
+            --light-gray: #ecf0f1;
+            --highlight-bg: #f1c40f;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--card-background);
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .alarm-controls {
+            padding: 20px;
+            text-align: center;
+            background-color: var(--light-gray);
+            border-bottom: 1px solid #ddd;
+        }
+        
+        #currentTime {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        #alarmButton {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        
+        #alarmButton:hover {
+            background-color: #2980b9;
+        }
+
+        #alarmButton:active {
+            transform: scale(0.98);
+        }
+
+        #alarmButton:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        main {
+            padding: 30px;
+        }
+
+        .schedule-section, .tips-section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+            transition: background-color 0.5s;
+        }
+        
+        li.active {
+            background-color: var(--highlight-bg);
+            border-left: 5px solid var(--accent-color);
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .time {
+            font-weight: 700;
+            color: var(--secondary-color);
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .activity {
+            flex-grow: 1;
+        }
+        
+        .tips-section ul li::before {
+            content: '💡';
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .tips-section li {
+            padding: 10px 0;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>📅 Jadwal Harian Produktif</h1>
+        </header>
+
+        <div class="alarm-controls">
+            <h2>Waktu Saat Ini (WITA)</h2>
+            <div id="currentTime">--:--:--</div>
+            <button id="alarmButton">Aktifkan Nada Dering</button>
+            <p id="alarmStatus" style="font-size:0.9em; margin-top:10px;">Tekan tombol untuk memulai alarm.</p>
+        </div>
+        
+        <main>
+            <div class="schedule-section">
+                <h2>🕌 Subuh & Pagi</h2>
+                <ul>
+                    <li id="task-04-30">
+                        <span class="time">04.30 – 04.50:</span><span class="activity">Salat Subuh</span>
+                    </li>
+                    <li id="task-04-50">
+                        <span class="time">04.50 – 05.10:</span><span class="activity">Dengar ceramah (motivasi Islami / kajian singkat)</span>
+                    </li>
+                    <li id="task-05-10">
+                        <span class="time">05.10 – 06.10:</span><span class="activity">Olahraga pagi (jogging, workout ringan)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="schedule-section">
+                <h2>🧠 Golden Hour (Waktu Emas 1)</h2>
+                <ul>
+                    <li id="task-06-10">
+                        <span class="time">06.10 – 07.30:</span><span class="activity">Belajar Bahasa Inggris (vocab, listening, speaking)</span>
+                    </li>
+                    <li id="task-07-30">
+                        <span class="time">07.30 – 08.00:</span><span class="activity">Sarapan & persiapan hari</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="schedule-section">
+                <h2>🕌 Salat Dhuha & Fokus</h2>
+                <ul>
+                    <li id="task-08-00">
+                        <span class="time">08.00 – 08.10:</span><span class="activity">Salat Dhuha (opsional, sangat dianjurkan)</span>
+                    </li>
+                    <li id="task-08-10">
+                        <span class="time">08.10 – 10.00:</span><span class="activity">Belajar Coding (praktik proyek / kursus)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="schedule-section">
+                <h2>🕌 Siang</h2>
+                <ul>
+                    <li id="task-12-00">
+                        <span class="time">12.00 – 12.20:</span><span class="activity">Salat Zuhur</span>
+                    </li>
+                    <li id="task-12-20">
+                        <span class="time">12.20 – 13.00:</span><span class="activity">Istirahat / makan siang</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="schedule-section">
+                <h2>🧠 Golden Hour (Waktu Emas 2)</h2>
+                <ul>
+                    <li id="task-13-00">
+                        <span class="time">13.00 – 14.30:</span><span class="activity">Belajar Trading (analisis chart, teori, praktik akun demo)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="schedule-section">
+                <h2>🕌 Sore</h2>
+                <ul>
+                    <li id="task-15-30">
+                        <span class="time">15.30 – 15.45:</span><span class="activity">Salat Asar</span>
+                    </li>
+                    <li id="task-15-45">
+                        <span class="time">15.45 – 16.45:</span><span class="activity">Konten Video AI (buat, edit, riset tren)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="schedule-section">
+                <h2>🌆 Menjelang Magrib</h2>
+                <ul>
+                    <li id="task-16-45">
+                        <span class="time">16.45 – 17.30:</span><span class="activity">Santai / nonton film (hiburan ringan / edukatif)</span>
+                    </li>
+                    <li id="task-18-10">
+                        <span class="time">18.10 – 18.30:</span><span class="activity">Salat Magrib</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="schedule-section">
+                <h2>🌙 Malam</h2>
+                <ul>
+                    <li id="task-18-30">
+                        <span class="time">18.30 – 19.00:</span><span class="activity">Makan malam / quality time</span>
+                    </li>
+                    <li id="task-19-00">
+                        <span class="time">19.00 – 19.30:</span><span class="activity">Salat Isya</span>
+                    </li>
+                    <li id="task-19-30">
+                        <span class="time">19.30 – 20.30:</span><span class="activity">Ulangi coding atau bahasa Inggris (review santai)</span>
+                    </li>
+                    <li id="task-20-30">
+                        <span class="time">20.30 – 21.00:</span><span class="activity">Dengar ceramah / refleksi harian</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="schedule-section">
+                <h2>😴 Istirahat</h2>
+                <ul>
+                    <li id="task-21-00">
+                        <span class="time">21.00 – 04.30:</span><span class="activity">Tidur malam berkualitas (7.5 jam)</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="tips-section">
+                <h2>💡 Tips Tambahan</h2>
+                <ul>
+                    <li>Gunakan metode Pomodoro saat belajar (25 menit fokus + 5 menit jeda).</li>
+                    <li>Catat progres harian (misalnya di buku/jurnal atau Google Calendar).</li>
+                    <li>Batasi media sosial agar tidak menyita fokus.</li>
+                    <li>Jadwal bisa disesuaikan jika ada kegiatan luar rumah.</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <audio id="alarmSound" src="https://www.soundjay.com/buttons/sounds/button-7.mp3" preload="auto"></audio>
+
+    <script>
+        // --- Mengambil elemen dari HTML ---
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const alarmButton = document.getElementById('alarmButton');
+        const alarmStatus = document.getElementById('alarmStatus');
+        const alarmSound = document.getElementById('alarmSound');
+        
+        // --- Daftar waktu alarm dari jadwal ---
+        const alarmTimes = [
+            '04:30', '04:50', '05:10', '06:10', '07:30', '08:00', '08:10',
+            '10:00', // Akhir dari coding
+            '12:00', '12:20', '13:00', '14:30', '15:30', '15:45', '16:45',
+            '17:30', '18:10', '18:30', '19:00', '19:30', '20:30', '21:00'
+        ];
+
+        // Objek untuk melacak alarm yang sudah berbunyi hari ini
+        let playedAlarms = {};
+        let intervalId = null;
+        let lastActiveElement = null;
+
+        // --- Fungsi utama untuk memeriksa waktu ---
+        function checkTime() {
+            const now = new Date();
+            
+            // Format waktu ke HH:MM:SS dan HH:MM
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const formattedTime = `${hours}:${minutes}:${seconds}`;
+            const checkTime = `${hours}:${minutes}`;
+
+            // Tampilkan jam digital
+            currentTimeDisplay.textContent = formattedTime;
+            
+            // Reset alarm yang sudah berbunyi jika sudah ganti hari
+            if (checkTime === '00:00') {
+                playedAlarms = {};
+            }
+
+            // Periksa apakah waktu saat ini cocok dengan jadwal alarm
+            if (alarmTimes.includes(checkTime) && !playedAlarms[checkTime]) {
+                alarmSound.play();
+                playedAlarms[checkTime] = true; // Tandai sudah berbunyi
+            }
+            
+            // Highlight aktivitas yang sedang berjalan
+            updateHighlight(checkTime);
+        }
+
+        function updateHighlight(currentTime) {
+            // Hapus highlight dari elemen sebelumnya
+            if (lastActiveElement) {
+                lastActiveElement.classList.remove('active');
+            }
+
+            // Cari elemen yang sesuai dengan waktu saat ini atau sebelumnya
+            let currentTaskTime = null;
+            for (const time of alarmTimes.sort()) { // urutkan waktu
+                if (currentTime >= time) {
+                    currentTaskTime = time.replace(':', '-');
+                } else {
+                    break;
+                }
+            }
+
+            // Tambahkan highlight
+            if (currentTaskTime) {
+                const elementId = `task-${currentTaskTime}`;
+                const activeElement = document.getElementById(elementId);
+                if(activeElement) {
+                    activeElement.classList.add('active');
+                    lastActiveElement = activeElement;
+                }
+            }
+        }
+
+        // --- Fungsi yang dijalankan saat tombol diklik ---
+        function startAlarms() {
+            // Interaksi pertama untuk 'membuka' izin audio
+            alarmSound.play().then(() => alarmSound.pause()).catch(e => console.error("Audio play failed:", e));
+            
+            // Jalankan checkTime() setiap detik
+            if (!intervalId) {
+                intervalId = setInterval(checkTime, 1000);
+            }
+            
+            // Ubah tampilan tombol dan status
+            alarmButton.textContent = 'Nada Dering Aktif';
+            alarmButton.disabled = true;
+            alarmStatus.textContent = 'Alarm akan berbunyi sesuai jadwal.';
+            
+            // Jalankan sekali di awal agar tidak menunggu 1 detik pertama
+            checkTime(); 
+        }
+
+        // --- Tambahkan event listener ke tombol ---
+        alarmButton.addEventListener('click', startAlarms);
+    </script>
+</body>
+</html>
+
